@@ -6,7 +6,7 @@ import pygame
 from pygame.locals import *
 
 
-FPS = 30
+FPS = 60
 SCREENWIDTH  = 864
 SCREENHEIGHT = 512
 PIPEGAPSIZE  = 100 # gap between upper and lower part of pipe
@@ -208,20 +208,20 @@ def mainGame(movementInfo):
     # list of lowerpipe
     lowerPipes = [
         {'x': SCREENWIDTH + 200, 'y': newPipe1[1]['y']},
-        {'x': SCREENWIDTH + 200 + (SCREENWIDTH / 2), 'y': newPipe2[1]['y']},
+        {'x': SCREENWIDTH + 200 + (SCREENWIDTH / 2), 'y': newPipe2[1]['y']},    
     ]
 
     pipeVelX = -4
 
     # player velocity, max velocity, downward accleration, accleration on flap
-    playerVelY    =  -9   # player's velocity along Y, default same as playerFlapped
+    playerVelY    =  -2   # player's velocity along Y, default same as playerFlapped
     playerMaxVelY =  10   # max vel along Y, max descend speed
-    playerMinVelY =  -8   # min vel along Y, max ascend speed
-    playerAccY    =   1   # players downward accleration
+    playerMinVelY =  -4   # min vel along Y, max ascend speed
+    playerAccY    =  0.5   # players downward accleration
     playerRot     =  45   # player's rotation
     playerVelRot  =   3   # angular speed
     playerRotThr  =  20   # rotation threshold
-    playerFlapAcc =  -9   # players speed on flapping
+    playerFlapAcc =  -7.5  # players speed on flapping
     playerFlapped = False # True when player flaps
 
 
@@ -377,7 +377,7 @@ def showGameOverScreen(crashInfo):
 
         playerSurface = pygame.transform.rotate(IMAGES['player'][1], playerRot)
         SCREEN.blit(playerSurface, (playerx,playery))
-        SCREEN.blit(IMAGES['gameover'], (50, 180))
+        SCREEN.blit(IMAGES['gameover'], (336, 180))
 
         FPSCLOCK.tick(FPS)
         pygame.display.update()
