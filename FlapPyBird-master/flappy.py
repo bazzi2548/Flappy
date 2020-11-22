@@ -215,11 +215,11 @@ def mainGame(movementInfo):
 
     # player velocity, max velocity, downward accleration, accleration on flap
     playerVelY    =  -2   # player's velocity along Y, default same as playerFlapped
-    playerMaxVelY =  10   # max vel along Y, max descend speed
+    playerMaxVelY =  5   # max vel along Y, max descend speed
     playerMinVelY =  -4   # min vel along Y, max ascend speed
     playerAccY    =  0.5   # players downward accleration
     playerRot     =  45   # player's rotation
-    playerVelRot  =   3   # angular speed
+    playerVelRot  =   2   # angular speed
     playerRotThr  =  20   # rotation threshold
     playerFlapAcc =  -7.5  # players speed on flapping
     playerFlapped = False # True when player flaps
