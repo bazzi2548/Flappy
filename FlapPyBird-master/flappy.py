@@ -1,10 +1,22 @@
 from itertools import cycle
 import random
 import sys
+import os
 
 import pygame
 from pygame.locals import *
 
+
+
+
+
+if os.path.exists("highscore.txt") == True:
+    f = open("highscore.txt", 'r')
+    content = f.read()
+    highscore = int(content)
+    f.close()
+else:
+    highscore = 0
 
 FPS = 30
 SCREENWIDTH  = 288
@@ -132,10 +144,12 @@ def main():
         movementInfo = showWelcomeAnimation()
         crashInfo = mainGame(movementInfo)
         showGameOverScreen(crashInfo)
+        
 
 
 def showWelcomeAnimation():
     """Shows welcome screen animation of flappy bird"""
+  
     # index of player to blit on screen
     playerIndex = 0
     playerIndexGen = cycle([0, 1, 2, 1])
@@ -189,6 +203,7 @@ def showWelcomeAnimation():
 
 def mainGame(movementInfo):
     score = playerIndex = loopIter = 0
+    
     playerIndexGen = movementInfo['playerIndexGen']
     playerx, playery = int(SCREENWIDTH * 0.2), movementInfo['playery']
 
@@ -258,6 +273,7 @@ def mainGame(movementInfo):
             if pipeMidPos <= playerMidPos < pipeMidPos + 4:
                 score += 1
                 SOUNDS['point'].play()
+            
 
         # playerIndex basex change
         if (loopIter + 1) % 3 == 0:
@@ -318,10 +334,13 @@ def mainGame(movementInfo):
 
         pygame.display.update()
         FPSCLOCK.tick(FPS)
+   
+
 
 
 def showGameOverScreen(crashInfo):
     """crashes the player down ans shows gameover image"""
+
     score = crashInfo['score']
     playerx = SCREENWIDTH * 0.2
     playery = crashInfo['y']
@@ -369,8 +388,16 @@ def showGameOverScreen(crashInfo):
             SCREEN.blit(IMAGES['pipe'][0], (uPipe['x'], uPipe['y']))
             SCREEN.blit(IMAGES['pipe'][1], (lPipe['x'], lPipe['y']))
 
+
+
         SCREEN.blit(IMAGES['base'], (basex, BASEY))
+
+       
         showScore(score)
+        highscoreSave(score)
+        showHighScore(highscore)
+
+    
 
         
 
@@ -379,10 +406,11 @@ def showGameOverScreen(crashInfo):
         SCREEN.blit(playerSurface, (playerx,playery))
         SCREEN.blit(IMAGES['gameover'], (50, 180))
 
+
         FPSCLOCK.tick(FPS)
         pygame.display.update()
 
-
+        
 def playerShm(playerShm):
     """oscillates the value of playerShm['val'] between 8 and -8"""
     if abs(playerShm['val']) == 8:
@@ -421,6 +449,36 @@ def showScore(score):
     for digit in scoreDigits:
         SCREEN.blit(IMAGES['numbers'][digit], (Xoffset, SCREENHEIGHT * 0.1))
         Xoffset += IMAGES['numbers'][digit].get_width()
+
+def highscoreSave(score):
+    global highscore
+
+    if score >= highscore:
+        highscore = score
+        f = open("highscore.txt", 'w')
+        f.write(str(highscore))
+        f.close()
+
+
+ 
+
+   
+
+
+def showHighScore(highscore):
+    """displays score in center of screen"""
+    highscoreDigits = [int(x) for x in list(str(highscore))]
+    totalWidth = 0 # total width of all numbers to be printed
+
+    for digit in highscoreDigits:
+        totalWidth += IMAGES['numbers'][digit].get_width()
+
+    Xoffset = (SCREENWIDTH - totalWidth) / 2
+
+    for digit in highscoreDigits:
+        SCREEN.blit(IMAGES['numbers'][digit], (Xoffset, SCREENHEIGHT * 0.8))
+        Xoffset += IMAGES['numbers'][digit].get_width()
+
 
 
 def checkCrash(player, upperPipes, lowerPipes):
