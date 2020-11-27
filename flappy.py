@@ -125,6 +125,15 @@ def main():
                 pygame.image.load(PIPES_LIST[pipeindex]).convert_alpha(), False, True),
             pygame.image.load(PIPES_LIST[pipeindex]).convert_alpha(),
         )
+        #하이스코어 이미지
+        IMAGES['Highscore'] = (
+            pygame.image.load(
+                'assets/sprites/highscore.png').convert_alpha()
+        )
+        IMAGES['Highscore_end'] = (
+            pygame.image.load(
+                'assets/sprites/highscore_end.png').convert_alpha()
+        )
         # 젤리 이미지 
         IMAGES['jelly'] = (
             pygame.image.load(
@@ -351,6 +360,7 @@ def mainGame(movementInfo):
         SCREEN.blit(IMAGES['base'], (basex, BASEY))
         # print score so player overlaps the score
         showScore(score)
+        showHighScore(highscore)
 
         # Player rotation has a threshold
         visibleRot = playerRotThr
@@ -359,6 +369,7 @@ def mainGame(movementInfo):
         
         playerSurface = pygame.transform.rotate(IMAGES['player'][playerIndex], visibleRot)
         SCREEN.blit(playerSurface, (playerx, playery))
+        SCREEN.blit(IMAGES['Highscore'], (0, 0))
 
         pygame.display.update()
         FPSCLOCK.tick(FPS)
@@ -387,9 +398,11 @@ def showGameOverScreen(crashInfo):
     while True:
         for event in pygame.event.get():
             if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
+                highscoreSave(score)
                 pygame.quit()
                 sys.exit()
             if event.type == KEYDOWN and (event.key == K_SPACE or event.key == K_UP):
+                highscoreSave(score)
                 if playery + playerHeight >= BASEY - 1:
                     return
 
@@ -415,15 +428,19 @@ def showGameOverScreen(crashInfo):
 
         SCREEN.blit(IMAGES['base'], (basex, BASEY))
         showScore(score)
-        highscoreSave(score)
-        showHighScore(highscore)
+        #showHighScore(highscore)
 
         
 
 
         playerSurface = pygame.transform.rotate(IMAGES['player'][1], playerRot)
         SCREEN.blit(playerSurface, (playerx,playery))
-        SCREEN.blit(IMAGES['gameover'], (336, 180))
+        
+        if highscore < score:
+            SCREEN.blit(IMAGES['Highscore_end'], (250, 180))
+
+        else:
+            SCREEN.blit(IMAGES['gameover'], (336, 180))      
 
         FPSCLOCK.tick(FPS)
         pygame.display.update()
@@ -455,7 +472,7 @@ def getRandomPipe():
 
 def getRandomJelly():
     jellyY = random.randrange(20, int(BASEY * 0.6))
-    jellyX = SCREENWIDTH + random.randrange(200, 500, 50)
+    jellyX = SCREENWIDTH + random.randrange(200, 400, 50)
 
     return [
         {'x': jellyX, 'y': jellyY},
@@ -493,11 +510,9 @@ def showHighScore(highscore):
     for digit in highscoreDigits:
         totalWidth += IMAGES['numbers'][digit].get_width()
 
-    Xoffset = (SCREENWIDTH - totalWidth) / 2
 
     for digit in highscoreDigits:
-        SCREEN.blit(IMAGES['numbers'][digit], (Xoffset, SCREENHEIGHT * 0.8))
-        Xoffset += IMAGES['numbers'][digit].get_width()
+        SCREEN.blit(IMAGES['numbers'][digit], (53, SCREENHEIGHT * 0.1))
 
 
 def checkCrash(player, upperPipes, lowerPipes):
