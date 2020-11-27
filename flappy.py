@@ -505,11 +505,6 @@ def highscoreSave(score):
 def showHighScore(highscore):
     """displays score in center of screen"""
     highscoreDigits = [int(x) for x in list(str(highscore))]
-    totalWidth = 0 # total width of all numbers to be printed
-
-    for digit in highscoreDigits:
-        totalWidth += IMAGES['numbers'][digit].get_width()
-
 
     for digit in highscoreDigits:
         SCREEN.blit(IMAGES['numbers'][digit], (53, SCREENHEIGHT * 0.1))
